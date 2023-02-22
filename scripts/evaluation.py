@@ -11,12 +11,12 @@ def get_performance(predictions, y_test, labels=[1, 0]):
     precision = None  # replace
     recall = None  # replace
     f1_score = None  # replace
-    
+
     report = None  # replace
-    
+
     cm = None  # replace
     cm_as_dataframe = pd.DataFrame(data=cm)
-    
+
     print('Model Performance metrics:')
     print('-'*30)
     print('Accuracy:', accuracy)
@@ -29,7 +29,7 @@ def get_performance(predictions, y_test, labels=[1, 0]):
     print('\nPrediction Confusion Matrix:')
     print('-'*30)
     print(cm_as_dataframe)
-    
+
     return accuracy, precision, recall, f1_score
 
 
