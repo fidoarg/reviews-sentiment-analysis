@@ -1,0 +1,26 @@
+data:
+    train: "./data/model_data/train/"
+    test: "./data/model_data/test"
+
+text_normalizing:
+    norm_to_use: "all"
+
+text_vectorizing:
+    kind: "tfidf"
+
+model:
+    type: "randomforest"
+    parameters:
+        random_state: 42
+    search_type: "random"
+    param_grid:
+        random_state: [42]
+        n_estimators: [100, 200, 500]
+        max_depth: [5, 10, 20]
+        min_samples_split: [2, 5, 10]
+        min_samples_leaf: [1, 2, 4]
+
+
+train:
+    cv: 5
+    n_iter: 10
