@@ -1,6 +1,6 @@
 FROM python:3.8.13 as base
 
-# Install some packages
+# Install some packages
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
     ffmpeg \
@@ -9,18 +9,25 @@ RUN apt-get update && \
     vim \
     nano \
     wget \
-    curl
+    curl \
+    libomp-dev
 
-# Add a non-root user
+# Add a non-root user
 RUN useradd -ms /bin/bash app
 USER app
 
-# Setup some paths
+# Setup some paths
 ENV PYTHONPATH=/home/app/.local/lib/python3.8/site-packages:/home/app/src
 ENV PATH=$PATH:/home/app/.local/bin
 
-# Install the python packages for this new user
+# Install the python packages for this new user
 ADD requirements.txt .
 RUN pip3 install -r requirements.txt
+
+# Download the NLTK stop words
+RUN python3 -m nltk.downloader stopwords
+
+# Download the spaCy en_core_web_sm model
+RUN python3 -m spacy download en_core_web_sm
 
 WORKDIR /home/app
