@@ -7,14 +7,16 @@ from sklearn.preprocessing import label_binarize
 
 def get_performance(predictions, y_test, labels=[1, 0]):
     # Put your code
-    accuracy = None  # replace
-    precision = None  # replace
-    recall = None  # replace
-    f1_score = None  # replace
+    accuracy = metrics.accuracy_score(y_true=y_test, y_pred=predictions)
+    precision = metrics.precision_score(y_true=y_test, y_pred=predictions)
+    recall = metrics.recall_score(y_true=y_test, y_pred=predictions)
+    f1_score = metrics.f1_score(y_true=y_test, y_pred=predictions)
 
-    report = None  # replace
+    report = metrics.classification_report(
+        y_true=y_test, y_pred=predictions, labels=labels)
 
-    cm = None  # replace
+    cm = metrics.confusion_matrix(
+        y_true=y_test, y_pred=predictions, labels=labels)
     cm_as_dataframe = pd.DataFrame(data=cm)
 
     print('Model Performance metrics:')
@@ -35,9 +37,11 @@ def get_performance(predictions, y_test, labels=[1, 0]):
 
 def plot_roc(model, y_test, features):
     # Put your code
-    fpr = None  # replace
-    tpr = None  # replace
-    roc_auc = None  # replace
+    # predictions= model.
+    y_score = model.predict_proba(features)
+    fpr, tpr, thresholds = metrics.roc_curve(
+        y_test, y_score[:, 1], pos_label=1)
+    roc_auc = metrics.roc_auc_score(y_true=y_test, y_score=y_score)
 
     plt.figure(figsize=(10, 5))
     plt.plot(fpr, tpr, label=f'ROC curve (area = {roc_auc})', linewidth=2.5)
@@ -51,3 +55,32 @@ def plot_roc(model, y_test, features):
     plt.show()
 
     return roc_auc
+
+def get_performance_report(predictions, y_test, labels=[1, 0]):
+
+    accuracy = metrics.accuracy_score(y_true=y_test, y_pred=predictions)
+    precision = metrics.precision_score(y_true=y_test, y_pred=predictions)
+    recall = metrics.recall_score(y_true=y_test, y_pred=predictions)
+    f1_score = metrics.f1_score(y_true=y_test, y_pred=predictions)
+
+    report = metrics.classification_report(
+        y_true=y_test, y_pred=predictions, labels=labels)
+
+    cm = metrics.confusion_matrix(
+        y_true=y_test, y_pred=predictions, labels=labels)
+    cm_as_dataframe = pd.DataFrame(data=cm)
+
+    performance_report = 'Model Performance metrics:' + '\n' + \
+        '-'*30 + '\n' + \
+        'Accuracy:' + str(accuracy) + '\n' + \
+        'Precision:'+ str(precision) + '\n' + \
+        'Recall:' +  str(recall) + '\n' + \
+        'F1 Score:', str(f1_score) + '\n' + \
+        '\nModel Classification report:' + '\n' + \
+        '-'*30 + '\n' + \
+        report + '\n' + \
+        '\nPrediction Confusion Matrix:' + '\n' + \
+        '-'*30 + '\n' + \
+        cm_as_dataframe
+
+    return performance_report

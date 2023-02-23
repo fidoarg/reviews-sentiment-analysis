@@ -77,6 +77,6 @@ def get_model_raw_data(data_dir: str) -> Tuple[pd.DataFrame, pd.DataFrame]:
 
     # Create a pandas dataframes from the lists
     X, y = pd.DataFrame({"Review": reviews}), pd.DataFrame(
-        {"Sentiment": sentiments}).astype('int8')
+        {"Sentiment": sentiments}).astype('int8').values.flatten()
 
     return (X, y)

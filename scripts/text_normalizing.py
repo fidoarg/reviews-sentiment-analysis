@@ -12,7 +12,6 @@ from nltk.stem import PorterStemmer
 from sklearn.base import BaseEstimator, TransformerMixin
 from enum import Enum
 tokenizer = ToktokTokenizer()
-nltk.download("stopwords")
 stopword_list = nltk.corpus.stopwords.words("english")
 nlp = spacy.load("en_core_web_sm")
 
