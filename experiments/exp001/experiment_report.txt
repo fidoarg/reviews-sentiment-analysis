@@ -1,0 +1,24 @@
+Model Performance metrics:
+------------------------------
+Accuracy: 0.8455
+Precision: 0.8345
+Recall: 0.8619
+F1 Score: 0.848
+
+Model Classification report: 
+------------------------------
+              precision    recall  f1-score   support
+
+           1       0.83      0.86      0.85     12500
+           0       0.86      0.83      0.84     12500
+
+    accuracy                           0.85     25000
+   macro avg       0.85      0.85      0.85     25000
+weighted avg       0.85      0.85      0.85     25000
+
+
+Prediction Confusion Matrix:
+------------------------------
+       0      1
+0  10774   1726
+1   2137  10363

@@ -6,7 +6,7 @@ text_normalizing:
     norm_to_use: "all"
 
 text_vectorizing:
-    kind: "tfidf"
+    kind: "bow"
     w2vec: false
 
 model:
