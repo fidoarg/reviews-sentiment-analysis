@@ -72,15 +72,15 @@ def get_performance_report(predictions, y_test, labels=[1, 0]):
 
     performance_report = 'Model Performance metrics:' + '\n' + \
         '-'*30 + '\n' + \
-        'Accuracy:' + str(accuracy) + '\n' + \
-        'Precision:'+ str(precision) + '\n' + \
-        'Recall:' +  str(recall) + '\n' + \
-        'F1 Score:', str(f1_score) + '\n' + \
-        '\nModel Classification report:' + '\n' + \
+        'Accuracy: ' + str(round(accuracy, 4)) + '\n' + \
+        'Precision: '+ str(round(precision, 4)) + '\n' + \
+        'Recall: ' +  str(round(recall, 4)) + '\n' + \
+        'F1 Score: ' + str(round(f1_score, 4)) + '\n' + \
+        '\nModel Classification report: ' + '\n' + \
         '-'*30 + '\n' + \
         report + '\n' + \
         '\nPrediction Confusion Matrix:' + '\n' + \
         '-'*30 + '\n' + \
-        cm_as_dataframe
+        str(cm_as_dataframe)
 
     return performance_report
