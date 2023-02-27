@@ -44,7 +44,7 @@ class TextVectorizer(BaseEstimator, TransformerMixin):
             else:
                 raise TypeError('Unsupported data type')
 
-            return self.vectorizer.transform(X)
+            return self.vectorizer.transform(X).astype(np.float32)
         else:
             # Convert each document to a vector by averaging its word vectors.
             X_vectors = []
@@ -58,4 +58,4 @@ class TextVectorizer(BaseEstimator, TransformerMixin):
                     X_vectors.append(doc_vector)
                 else:
                     X_vectors.append(np.zeros(100))
-            return np.array(X_vectors)
+            return np.array(X_vectors).astype(np.float32)
