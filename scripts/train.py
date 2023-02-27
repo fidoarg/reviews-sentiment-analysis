@@ -39,9 +39,10 @@ def parse_text_normalizing(**params_text_norm: dict) -> dict:
 
 
 def parse_text_vectorizing(**params_text_vect: dict) -> dict:
-
-    if params_text_vect.get('kind') is not None and params_text_vect['kind'] in ('bow', 'tfidf'):
-        return {'kind': params_text_vect['kind']}
+    if  params_text_vect.get('w2vec') == True:
+        return {'kind': 'bow', 'w2vec': True}
+    elif params_text_vect.get('kind') is not None and params_text_vect['kind'] in ('bow', 'tfidf'):
+        return {'kind': params_text_vect['kind'], 'w2vec': False}
     elif params_text_vect.get('kind') is None:
         AttributeError('Vectorization kind missing')
     elif not params_text_vect['kind'] in ('bow', 'tfidf'):
