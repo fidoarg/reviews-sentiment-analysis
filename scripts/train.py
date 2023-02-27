@@ -107,8 +107,6 @@ def main(config_file):
     elif model_type == 'lightgbm':
         model = lightgbm.create_model(**config['model']["parameters"])
 
-    
-
     experiment_dir = os.path.dirname(config_file)
     path_to_preprocesser = os.path.join(
         experiment_dir,
@@ -162,10 +160,10 @@ def main(config_file):
     best_model = grid_search.best_estimator_
     X_test_model = preprocess_pipeline.transform(X_test)
     y_pred = best_model.predict(X=X_test_model)
-    y_prob = best_model.predict_proba(X=X_test_model)
+    y_probs = best_model.predict_proba(X=X_test_model)
 
     roc_auc = roc_auc_score(
-        y_score=y_prob, y_true=y_test)
+        y_score=y_probs[:, 1], y_true=y_test)
     perf_report = get_performance_report(predictions=y_pred, y_test=y_test)
 
     path_to_report_file = os.path.join(
@@ -177,13 +175,12 @@ def main(config_file):
         experiment_dir,
         f'model-roc-auc-{roc_auc:.4f}.pkl'
     )
-    
+
     with open(path_to_report_file, 'w') as report_file:
         report_file.write(perf_report)
 
     with open(path_to_model_file, 'wb') as model_file:
         pickle.dump(best_model, model_file)
-
 
 
 if __name__ == "__main__":
