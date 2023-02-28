@@ -3,6 +3,7 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from pandas.core.frame import DataFrame
 import numpy as np
+from scipy.sparse import csr_matrix
 
 class TextVectorizer(BaseEstimator, TransformerMixin):
     def __init__(self, kind='bow', w2vec=False):
@@ -19,31 +20,35 @@ class TextVectorizer(BaseEstimator, TransformerMixin):
             self.w2v_model = None
 
     def fit(self, X, y=None):
-        if not self.w2vec:
-            if isinstance(X, DataFrame):
-                self.text_data = X.squeeze().values.astype(str)
-            elif isinstance(X, np.ndarray):
-                self.text_data = np.asarray(X).squeeze().astype(str)
-            else:
-                raise TypeError('Unsupported data type')
 
+        if isinstance(X, DataFrame):
+            self.text_data = X.squeeze().values.astype(str)
+        elif isinstance(X, (np.ndarray, csr_matrix)):
+            self.text_data = np.asarray(X).squeeze().astype(str)
+        else:
+            raise TypeError('Unsupported data type')
+
+        if not self.w2vec:
             self.vectorizer.fit(self.text_data)
+
         else:
             # Train a Word2Vec model on the input data.
-            sentences = [doc.split() for doc in X]
-            self.w2v_model = Word2Vec(sentences, size=100, window=5, min_count=5, workers=3)
+            sentences = [doc.split() for doc in self.text_data]
+            self.w2v_model = Word2Vec(
+                sentences, vector_size=100, window=5, min_alpha=0.005, workers=3)
 
         return self
 
     def transform(self, X, y=None):
-        if not self.w2vec:
-            if isinstance(X, DataFrame):
-                X = X.squeeze().values.astype(str)
-            elif isinstance(X, np.ndarray):
-                X = np.asarray(X).squeeze().astype(str)
-            else:
-                raise TypeError('Unsupported data type')
 
+        if isinstance(X, DataFrame):
+            X = X.squeeze().values.astype(str)
+        elif isinstance(X, (np.ndarray, csr_matrix)):
+            X = np.asarray(X).squeeze().astype(str)
+        else:
+            raise TypeError('Unsupported data type')
+
+        if not self.w2vec:
             return self.vectorizer.transform(X).astype(np.float32)
         else:
             # Convert each document to a vector by averaging its word vectors.
@@ -51,7 +56,7 @@ class TextVectorizer(BaseEstimator, TransformerMixin):
             for doc in X:
                 doc_vector = []
                 for word in doc.split():
-                    if word in self.w2v_model.wv.vocab:
+                    if word in self.w2v_model.wv.key_to_index.keys():
                         doc_vector.append(self.w2v_model.wv[word])
                 if doc_vector:
                     doc_vector = np.mean(doc_vector, axis=0)

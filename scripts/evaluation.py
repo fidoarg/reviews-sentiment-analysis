@@ -41,7 +41,7 @@ def plot_roc(model, y_test, features):
     y_score = model.predict_proba(features)
     fpr, tpr, thresholds = metrics.roc_curve(
         y_test, y_score[:, 1], pos_label=1)
-    roc_auc = metrics.roc_auc_score(y_true=y_test, y_score=y_score)
+    roc_auc = metrics.roc_auc_score(y_true=y_test, y_score=y_score[:, 1])
 
     plt.figure(figsize=(10, 5))
     plt.plot(fpr, tpr, label=f'ROC curve (area = {roc_auc})', linewidth=2.5)
